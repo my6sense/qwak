@@ -35,12 +35,9 @@ var Kwak = {
     setupConnector: function (connection) {
         queryBuilder.setupConnector(connection);
     },
-    setupDataModels: function (externalDataViews, externalDataSets, externalDataSources) {
-        queryBuilder.setupDataModels(externalDataViews, externalDataSets, externalDataSources);
-    },
-    init: function (dataSources, dataViews, dataSets) {
-        // validate compatibility (all views defined in sets must exist, etc..)
-        // queryBuilder.init();
+    setupDataModels: function (dataModels) {
+        console.log("Models setup started..");
+        queryBuilder.setupDataModels(dataModels);
     },
     build: function (config) {
         // validate that all the data configuration are set.

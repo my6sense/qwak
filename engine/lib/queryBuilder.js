@@ -397,7 +397,10 @@ var QueryBuilder = {
      * @param externalDataViews
      * @param externalDataSets
      */
-    setupDataModels: function (externalDataViews, externalDataSets, externalDataSources) {
+    setupDataModels: function (dataModels) {
+        var externalDataViews = dataModels.dataViews;
+        var externalDataSets = dataModels.dataSets;
+        var externalDataSources = dataModels.dataSources;
         function loadJson() {
 
         }
@@ -405,6 +408,7 @@ var QueryBuilder = {
         _dataViews = externalDataViews || loadJson();
         _dataSets = externalDataSets || loadJson();
         _dataSources = externalDataSources || loadJson();
+        console.log("Finished models setup.");
     },
     /**
      *
