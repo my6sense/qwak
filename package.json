@@ -1,6 +1,6 @@
 {
   "name": "kwak",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Reports builder for nodeJs",
   "main": "index.js",
   "scripts": {
