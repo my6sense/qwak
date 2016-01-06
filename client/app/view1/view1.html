@@ -4,7 +4,7 @@
             <md-tab label="Sources" >
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror name="dataSources" ui-codemirror-opts="editorOptions"  ng-model="configs.dataSources">
+                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataSources">
 
                         </ui-codemirror>
                     </div>
@@ -13,7 +13,7 @@
             <md-tab label="Views">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror name="dataSources" ui-codemirror-opts="editorOptions"  ng-model="configs.dataViews">
+                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataViews">
 
                         </ui-codemirror>
                     </div>
@@ -22,8 +22,17 @@
             <md-tab label="Sets">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror name="dataSources" ui-codemirror-opts="editorOptions"  ng-model="configs.dataSets">
+                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataSets">
 
+                        </ui-codemirror>
+                    </div>
+                </md-content>
+            </md-tab>
+            <md-tab label="Query">
+                <md-content class="md-padding">
+                    <div class="tab-container">
+                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="query">
+                                This is where the query goes..
                         </ui-codemirror>
                     </div>
                 </md-content>
@@ -40,6 +49,9 @@
     <div layout="row" layout-align="start center" class="controls-row">
         <md-button class="md-raised md-primary" ng-click="updateModels()">
             Update Models
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="generateReport()">
+            Query
         </md-button>
         <div ng-show="showActionStatus">{{actionStatus}}</div>
     </div>

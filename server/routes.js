@@ -10,8 +10,11 @@ var routes = {
          res.sendFile(__dirname + '/static/index.html');
          });*/
         app.post('/init', function(req, res){
-            console.log(req.body);
             builder.setupDataModels(req.body);
+            res.sendStatus(200);
+        });
+        app.post('/generateReport', function(req, res){
+            //builder.buildReport(req.body);
 
             res.sendStatus(200);
         });

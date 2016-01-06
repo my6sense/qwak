@@ -9,7 +9,7 @@ angular.module('myApp.view1', ['ngRoute'])
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http','$timeout', function ($scope, $http, $timeout) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
 
         // --- INNER FUNCTIONS --- //
 
@@ -36,17 +36,22 @@ angular.module('myApp.view1', ['ngRoute'])
         // --- SCOPE FUNCTIONS --- //
         $scope.updateModels = function () {
             $http.post("/init", $scope.configs).success(function () {
-                $scope.queryResults = "1,2,3,4";
-                $scope.showActionCompletedIndication("Success!");
-                $scope.activeTabIndex = 3;
+                $scope.showActionCompletedIndication("Models Updated!");
             });
         };
-        $scope.showActionCompletedIndication = function(msg){
+        $scope.showActionCompletedIndication = function (msg) {
             $scope.actionStatus = msg;
             $scope.showActionStatus = true;
-            $timeout(function(){
+            $timeout(function () {
                 $scope.showActionStatus = false;
-            },6000);
+            }, 15000);
+        };
+        $scope.generateReport = function () {
+            $http.post("/generateReport", $scope.configs).success(function () {
+                $scope.queryResults = "1,2,3,4";
+                $scope.showActionCompletedIndication("Report Generated!");
+                $scope.activeTabIndex = 4;
+            });
         };
 
         // --- INIT --- //
