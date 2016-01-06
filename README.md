@@ -19,14 +19,15 @@ High-level data queries builder. This tool allows you to specify reusable data q
 
 ## Motivation
 
-Inspired by various open source libraries, such as Birt and Jasper for Java, I wanted to create aan engine for generating reports. The idea is to define the data set once and then to query it in various 
+Inspired by various open source libraries, such as Birt and Jasper for Java, I wanted to create an engine for generating reports. The idea is to define the data set once and then to query it in various 
 ways. Using this API, non-developers can describe the data they want to view using the predefined
 data sets and a simple JSON.
 
 ## Installation
 
 npm install kwak;
-var Kwak = require('Kwak');
+
+var kwak = require('kwak');
 
 ## API Reference
 
@@ -35,7 +36,3 @@ You can find the docs here.
 ## Tests
 
 npm test
-
-## License
-
-A short snippet describing the license (MIT, Apache, etc.)

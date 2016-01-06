@@ -10,6 +10,10 @@ describe('queryBuilder tests: ', function () {
         debug: true,
         client: 'postgres'
     };
+    var connectionRedshift = {
+        debug: true,
+        client: 'postgres'
+    };
     var dataSources = {
         dev: connectionTest,
         redshift: connectionRedshift
@@ -629,7 +633,7 @@ describe('queryBuilder tests: ', function () {
 
     });
 
-    describe('test report builder - On Redshift', function () {
+    xdescribe('test report builder - On Redshift', function () {
 
 
         queryBuilder.setupConnector(connectionRedshift);
