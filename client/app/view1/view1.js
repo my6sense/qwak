@@ -9,52 +9,115 @@ angular.module('myApp.view1', ['ngRoute'])
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q',
+        function ($scope, $http, $timeout, appData, $q) {
 
-        // --- INNER FUNCTIONS --- //
+            // --- INNER FUNCTIONS --- //
 
-        function _init() {
-            $scope.showActionStatus = false;
-            $scope.actionStatus = "";
-
-            $scope.queryResults = "";
-            $scope.configs = {
-                dataSources: JSON.stringify([
-                    {a: "1"},
-                    {b: "2"}]),
-                dataViews: JSON.stringify([{a: "1"}, {b: "2"}]),
-                dataSets: JSON.stringify([{a: "1"}, {b: "2"}]),
-            };
-            $scope.editorOptions = {
-                lineWrapping: true,
-                lineNumbers: false,
-                readOnly: 'nocursor',
-                mode: 'json',
-            };
-        }
-
-        // --- SCOPE FUNCTIONS --- //
-        $scope.updateModels = function () {
-            $http.post("/init", $scope.configs).success(function () {
-                $scope.showActionCompletedIndication("Models Updated!");
-            });
-        };
-        $scope.showActionCompletedIndication = function (msg) {
-            $scope.actionStatus = msg;
-            $scope.showActionStatus = true;
-            $timeout(function () {
+            function _init() {
                 $scope.showActionStatus = false;
-            }, 15000);
-        };
-        $scope.generateReport = function () {
-            $http.post("/generateReport", $scope.configs).success(function () {
-                $scope.queryResults = "1,2,3,4";
-                $scope.showActionCompletedIndication("Report Generated!");
-                $scope.activeTabIndex = 4;
-            });
-        };
+                $scope.actionStatus = "";
 
-        // --- INIT --- //
+                $scope.queryResults = "";
+                $scope.configs = {
+                    dataSources: JSON.stringify(
+                        {
+                            name: "localDb",
+                            client: 'sqlite3',
+                            connection: {
+                                filename: "./test.db"
+                            }
+                        }
+                    ),
+                    dataViews: JSON.stringify({
+                        "name" : "sampleView",
+                        "table": "Events",
+                        "fields": [
+                            {
+                                "name": "id",
+                                "type": "dimension",
+                                "query": {
+                                    "field": "id"
+                                }
+                            },
+                            {
+                                "name": "measure1",
+                                "type": "measure",
+                                "query": {
+                                    "field": "measure1"
+                                }
+                            },
+                        ]
+                    }),
+                    dataSets: JSON.stringify(
+                        {
+                            "name" : "sampleSet",
+                            "dataSource": "localDb",
+                            "data": {
+                                "joins": [
+                                    {
+                                        "view": "sampleView"
+                                    }
+                                ]
 
-        _init();
-    }]);
+                            }
+                        }
+                    ),
+                };
+                $scope.queryConfig = JSON.stringify({
+                    "data_set": "sampleSet",
+                        "dimensions": ['sampleView.id'],
+                        "measures": ['sampleView.measure1'
+                    ],
+                        "filters": {
+
+                        /*                    "events.network_id": [
+                         {
+                         "operator": "=",
+                         "value": "${networkId}"
+                         }
+                         ],*/
+                    }
+                });
+
+                $scope.editorOptions = {
+                    lineWrapping: true,
+                    lineNumbers: false,
+                    readOnly: 'nocursor',
+                    mode: 'json',
+                };
+            }
+
+            // --- SCOPE FUNCTIONS --- //
+            $scope.updateModels = function () {
+                $q.all([
+                    appData.save("dataView", $scope.configs.dataViews),
+                    appData.save("dataSource", $scope.configs.dataSources),
+                    appData.save("dataSet", $scope.configs.dataSets),
+                ]).then(function () {
+                    $scope.showActionCompletedIndication("Models Updated!");
+
+                }, function (error) {
+                    $scope.showActionCompletedIndication("Error. Could not save data.");
+
+                });
+            };
+            $scope.showActionCompletedIndication = function (msg) {
+                $scope.actionStatus = msg;
+                $scope.showActionStatus = true;
+                $timeout(function () {
+                    $scope.showActionStatus = false;
+                }, 15000);
+            };
+            $scope.generateReport = function () {
+                appData.post("dataQuery/run", $scope.queryConfig).success(function (data) {
+                    $scope.queryResults = data;
+                    $scope.showActionCompletedIndication("Report Generated!");
+                    $scope.activeTabIndex = 4;
+                });
+            };
+
+            // --- INIT --- //
+
+            _init();
+        }]);

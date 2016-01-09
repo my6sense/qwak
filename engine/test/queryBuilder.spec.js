@@ -14,9 +14,16 @@ describe('queryBuilder tests: ', function () {
         debug: true,
         client: 'postgres'
     };
+    var localDb = {
+        client: 'sqlite3',
+        connection: {
+            filename: "./test.db"
+        }
+    };
     var dataSources = {
         dev: connectionTest,
-        redshift: connectionRedshift
+        redshift: connectionRedshift,
+        localDb : localDb
     };
     var dataViews = {
         "view1": {
@@ -341,6 +348,25 @@ describe('queryBuilder tests: ', function () {
 
                 }
             ]
+        },
+        "sampleView" :{
+            "table": "Events",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "dimension",
+                    "query" : {
+                        "field" : "id"
+                    }
+                },
+                {
+                    "name": "measure1",
+                    "type": "measure",
+                    "query" : {
+                        "field" : "measure1"
+                    }
+                },
+            ]
         }
 
     };
@@ -412,10 +438,26 @@ describe('queryBuilder tests: ', function () {
                 ]
 
             }
-        }
+        },
+        "sampleSet" : {
+            "dataSource": "localDb",
+            "data": {
+                "joins": [
+                    {
+                        "view": "sampleView"
+                    }
+                ]
+
+            }
+        },
+    };
+    var dataModels = {
+        dataSources : dataSources,
+        dataSets :dataSets,
+        dataViews :dataViews
     };
 
-    queryBuilder.setupDataModels(dataViews, dataSets, dataSources);
+    queryBuilder.setupDataModels(dataModels);
 
     xit('test basic postgres queries generation', function () {
 
@@ -633,10 +675,12 @@ describe('queryBuilder tests: ', function () {
 
     });
 
-    xdescribe('test report builder - On Redshift', function () {
+    describe('test report builder - On Redshift', function () {
 
 
-        queryBuilder.setupConnector(connectionRedshift);
+/*
+        queryBuilder.setupConnector(localDb);
+*/
 
         xit('test campaigns query', function (done) {
 
@@ -722,7 +766,7 @@ describe('queryBuilder tests: ', function () {
 
         }, 60000);
 
-        it('test network traffic aggregation query', function (done) {
+        xit('test network traffic aggregation query', function (done) {
 
             var reportConfig = {
                 "data_set": "networks_events",
@@ -767,6 +811,33 @@ describe('queryBuilder tests: ', function () {
                 .then(function (result) {
                     if (result) {
                         //console.log(result);
+                        done();
+                    }
+                });
+
+        }, 60000);
+
+        it('test sample DB', function (done) {
+
+            var reportConfig = {
+                "data_set": "sampleSet",
+                "dimensions": ['sampleView.id'],
+                "measures": ['sampleView.measure1'
+                ],
+                "filters": {
+
+/*                    "events.network_id": [
+                        {
+                            "operator": "=",
+                            "value": "${networkId}"
+                        }
+                    ],*/
+                }
+            };
+            queryBuilder.buildReport(reportConfig,true)
+                .then(function (result) {
+                    if (result) {
+                        console.log(result);
                         done();
                     }
                 });

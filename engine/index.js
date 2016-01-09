@@ -36,7 +36,7 @@ var Kwak = {
         queryBuilder.setupConnector(connection);
     },
     setupDataModels: function (dataModels) {
-        console.log("Models setup started..");
+        console.log("Models setup started..", dataModels);
         queryBuilder.setupDataModels(dataModels);
     },
     build: function (config) {
@@ -44,8 +44,14 @@ var Kwak = {
         return queryBuilder.build(config)
     },
     buildReport: function (reportConfig) {
+        //TODO decide on the best way to pass the models that are used in the report
+        // One way to do it is to init the models each time we build a report, but it seems wasteful.
+        // Another way is to pass only the relevant models each time we query: the relevant data source, data set, and views
+        // that are in the data set.
+        //TODO decide on a better way to generate sample data.
+        var GENERATE_SAMPLE_DATA = true;
         // validate that all the data configuration are set.
-        return queryBuilder.buildReport(reportConfig)
+        return queryBuilder.buildReport(reportConfig,GENERATE_SAMPLE_DATA)
     }
 };
 module.exports = Kwak;

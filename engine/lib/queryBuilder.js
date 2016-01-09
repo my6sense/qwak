@@ -31,15 +31,16 @@
 
 var knex;
 var _ = require("underscore");
-
+var q = require('q');
 function getActualFieldByViewField(viewField, dataViews) {
     var view = viewField.split(".")[0];
     var field = viewField.split(".")[1];
-    var fieldObj = _.findWhere(dataViews[view].fields, {name: field});
+    var viewObj = _.findWhere(dataViews, {name : view});
+    var fieldObj = _.findWhere(viewObj.fields, {name: field});
     if (fieldObj) { // if there is alias on the field we use it for the order by clause (since it's above in the hierarchy)
         field = fieldObj.as || fieldObj.name;
     }
-    var table = _dataViews[view].table;
+    var table = viewObj.table;
     return table + "." + field;
 
 }
@@ -125,7 +126,9 @@ function joinDataSet(joinDescription, queries, views) {
 
             var fieldName1 = getFieldNameToUse(i - 1, joinDescription);
             var fieldName2 = getFieldNameToUse(i, joinDescription);
-            this.on(views[joinDescription[i - 1].view].table + "." + fieldName1, "=", views[joinDescription[i].view].table + "." + fieldName2);
+            var viewObj1 = _.findWhere(views,{name: joinDescription[i - 1].view});
+            var viewObj2 = _.findWhere(views,{name: joinDescription[i].view});
+            this.on(viewObj1.table + "." + fieldName1, "=", viewObj2.table + "." + fieldName2);
         });
     }
     return q;
@@ -389,8 +392,33 @@ var QueryBuilder = {
     /**
      * @param connection
      */
-    setupConnector: function (connection) {
-        knex = require('knex')(connection);
+    setupConnector: function (connection, generateSampleData) {
+        var deferred = q.defer();
+        var Knex = require('knex');
+        knex = Knex(connection);
+        if (generateSampleData){
+            knex.schema.createTableIfNotExists('events', function (table) {
+                table.increments('id');
+                table.integer('measure1');
+                table.timestamps();
+            }).then(function () {
+                console.log('Events Table is Created!');
+                knex('events').insert([{measure1: 20}, {measure1: 30},  { measure1: 40}]).then(function(){
+                    console.log('Events Table is filled with data!');
+                    knex.raw("SELECT * FROM Events;")
+                        .then(function (result) {
+                            if (result) {
+                                console.log(result);
+                            }
+                        });
+                    deferred.resolve();
+
+                });
+            });
+        } else {
+            deferred.resolve();
+        }
+        return deferred.promise;
     },
     /**
      *
@@ -562,41 +590,67 @@ var QueryBuilder = {
                 });
 
      */
-    buildReport: function (reportConfig) {
-        var dataSource = _dataSources[_dataSets[reportConfig.data_set].dataSource];
+    buildReport: function (reportConfig, useSampleData) {
+/*        console.log("_dataSources : " ,_dataSources);
+        console.log("_dataSets: :" ,_dataSets);
+        console.log(reportConfig.data_set);*/
+        //TODO convert all the places where there is direct access by key to one of the models to work
+        // with an the key as a property.
+        var deferred = q.defer();
+        var dataSet = _.findWhere(_dataSets, {name : reportConfig.data_set});
+        var dataSource = _.findWhere(_dataSources,{name :dataSet.dataSource});
 
-        QueryBuilder.setupConnector(dataSource);
-        // iterate over all the views in the data set.
-        var dataSet = _dataSets[reportConfig.data_set];
-        var views = _.pluck(dataSet.data.joins, 'view');
-        var joinsProps = dataSet.data.joins;
-        var viewsQueries = [];
-        for (var i = 0; i < views.length; i++) {
-            var view = _dataViews[views[i]];
-            view.name = views[i];
-            var joinField = _.findWhere(joinsProps, {view: view.name}).field;
-            // generate the query for the view with all the parameters above.
-            var query = generateQueryForView(view, reportConfig, joinField).as(view.table);
-            viewsQueries.push(query);
-        }
+        QueryBuilder.setupConnector(dataSource,useSampleData).then(function(){
+            // iterate over all the views in the data set.
+            var views = _.pluck(dataSet.data.joins, 'view');
+            var joinsProps = dataSet.data.joins;
+            var viewsQueries = [];
+            for (var i = 0; i < views.length; i++) {
+                console.log("here0");
 
-        for (var i = 0; i < viewsQueries.length; i++) {
-            console.log(viewsQueries.toString());
-        }
-        var query = joinDataSet(dataSet.data.joins, viewsQueries, _dataViews);
-        var sortBy = reportConfig.sortBy;
-        if (sortBy) {
-            for (var i = 0; i < sortBy.length; i++) {
-                var sortByField = sortBy[i];
-                var actualField = getActualFieldByViewField(sortByField.field, _dataViews);
-                query.orderBy(actualField, sortByField.order || 'asc');
+                var view =  _.findWhere(_dataViews, {name : views[i]});
+                view.name = views[i];
+                var joinField = _.findWhere(joinsProps, {view: view.name}).field;
+                console.log("here1");
+                // generate the query for the view with all the parameters above.
+                var query = generateQueryForView(view, reportConfig, joinField).as(view.table);
+                viewsQueries.push(query);
+                console.log("here2");
+
             }
-        }
 
-        console.log("final query: ", query.toString());
+            for (var i = 0; i < viewsQueries.length; i++) {
+                console.log(viewsQueries.toString());
+            }
+            console.log("here3");
 
-        // apply sort on the result.
-        return query;
+            var query = joinDataSet(dataSet.data.joins, viewsQueries, _dataViews);
+            var sortBy = reportConfig.sortBy;
+            if (sortBy) {
+                for (var i = 0; i < sortBy.length; i++) {
+                    var sortByField = sortBy[i];
+                    var actualField = getActualFieldByViewField(sortByField.field, _dataViews);
+                    query.orderBy(actualField, sortByField.order || 'asc');
+                }
+            }
+
+            console.log("final query: ", query.toString());
+
+            // apply sort on the result.
+            query.then(function(result){
+                if (result){
+                    deferred.resolve(result);
+                } else {
+                    deferred.reject(null);
+                }
+
+            },function(error){
+                // error
+                deferred.reject(error);
+
+            });
+        });
+        return deferred.promise;
     }
 };
 module.exports = QueryBuilder;

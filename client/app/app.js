@@ -7,7 +7,8 @@ angular.module('myApp', [
     'ui.codemirror',
     'myApp.view1',
     'myApp.view2',
-    'myApp.version'
+    'myApp.version',
+    'myApp.services.data-access'
 ]).
 config(['$routeProvider', function ($routeProvider) {
     $routeProvider.otherwise({redirectTo: '/view1'});
