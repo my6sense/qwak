@@ -5,6 +5,7 @@
                 <md-content class="md-padding">
                     <div layout="row" class="tab-container">
                         <div flex="20">
+                            <md-button class="md-raised md-primary" ng-click="addPreviewModel()">Create</md-button>
                             <md-list-item ng-repeat="source in dataModels.DATA_SOURCE"
                                           ng-class="{active:($index === activeModels[modelTypes.DATA_SOURCE])}"
                                           ng-click="modelSelected(modelTypes.DATA_SOURCE,$index)">

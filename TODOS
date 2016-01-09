@@ -1,3 +1,5 @@
-- Allow for adding a model.
+- When adding a new model, it's id should be updated immediately.
+- problem with removal - does not get removed (should use splice)
+- model is resetting each time list gets selected, it should not.
 - separate the actual dataModel from db data such as ID , createdAt, updatedAt..
 

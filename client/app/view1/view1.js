@@ -45,17 +45,16 @@ angular.module('myApp.view1', ['ngRoute'])
                 $scope.tabs = [];
 
                 $scope.queryResults = "";
-                $scope.configs = {
-                    dataSources: angular.toJson(
-                        {
-                            name: "localDb",
-                            client: 'sqlite3',
-                            connection: {
-                                filename: "./test.db"
-                            }
-                        }, true
-                    ),
-                    dataViews: angular.toJson({
+                $scope.previewModels = {
+                    DATA_SOURCE: {
+                        name: "localDb",
+                        client: 'sqlite3',
+                        connection: {
+                            filename: "./test.db"
+                        }
+                    }
+                    ,
+                    DATA_VIEW: {
                         "name": "sampleView",
                         "table": "Events",
                         "fields": [
@@ -74,21 +73,20 @@ angular.module('myApp.view1', ['ngRoute'])
                                 }
                             },
                         ]
-                    }, true),
-                    dataSets: angular.toJson(
-                        {
-                            "name": "sampleSet",
-                            "dataSource": "localDb",
-                            "data": {
-                                "joins": [
-                                    {
-                                        "view": "sampleView"
-                                    }
-                                ]
+                    },
+                    DATA_SET: {
+                        "name": "sampleSet",
+                        "dataSource": "localDb",
+                        "data": {
+                            "joins": [
+                                {
+                                    "view": "sampleView"
+                                }
+                            ]
 
-                            }
-                        }, true
-                    ),
+                        }
+                    }
+
                 };
                 $scope.queryConfig = angular.toJson({
                     "data_set": "sampleSet",
@@ -143,6 +141,7 @@ angular.module('myApp.view1', ['ngRoute'])
                     return angular.toJson(value);
                 }
             }
+
             //ngModel.$formatters.push(formatter);
 
             // --- SCOPE FUNCTIONS --- //
@@ -157,7 +156,7 @@ angular.module('myApp.view1', ['ngRoute'])
                         DATA_SOURCE: results[1].data,
                         DATA_SET: results[2].data
                     };
-                    $scope.modelSelected($scope.modelTypes.DATA_SOURCE,0);
+                    $scope.modelSelected($scope.modelTypes.DATA_SOURCE, 0);
                     $scope.showActionCompletedIndication("Models Loaded Successfully!");
 
                 }, function (error) {
@@ -206,18 +205,29 @@ angular.module('myApp.view1', ['ngRoute'])
                 $scope.modelSelected(model, 0);
             };
             $scope.modelSelected = function (modelType, index) {
-                console.log("modelSelected - " + modelType + " - index : "+index);
+                console.log("modelSelected - " + modelType + " - index : " + index);
                 $scope.activeModels[modelType] = index;
                 $scope.activeModelType = modelType;
-                $scope.activeModel = angular.toJson($scope.dataModels[modelType][$scope.activeModels[modelType]],true);
+                $scope.activeModel = angular.toJson($scope.dataModels[modelType][$scope.activeModels[modelType]], true);
+            };
+            $scope.addPreviewModel = function () {
+                var newModel = _.clone($scope.previewModels[$scope.activeModelType]);
+                newModel.token = new Date().getTime();
+                $scope.dataModels[$scope.activeModelType].unshift(newModel);
+                $scope.modelSelected($scope.activeModelType, 0);
             };
             $scope.saveOrUpdateModel = function () {
                 var model = JSON.parse($scope.activeModel);
-                appData.saveOrUpdate($scope.modelPathName[$scope.activeModelType], model)
+                appData.saveOrUpdate($scope.modelPathName[$scope.activeModelType], model).success(function(result){
+                    // update the model with the new data
+                    $scope.dataModels[$scope.activeModelType][$scope.activeModels[$scope.activeModelType]] = result;
+                    $scope.activeModel = angular.toJson(result,true);
+
+                });
             };
             $scope.deleteModel = function () {
                 var model = JSON.parse($scope.activeModel);
-                appData.remove($scope.modelPathName[$scope.activeModelType], model).then(function(){
+                appData.remove($scope.modelPathName[$scope.activeModelType], model).then(function () {
                     // remove item from list
                     delete $scope.dataModels[$scope.activeModelType][$scope.activeModels[$scope.activeModelType]];
                 });
@@ -225,17 +235,4 @@ angular.module('myApp.view1', ['ngRoute'])
             // --- INIT --- //
 
             _init();
-        }])
-.directive('toJson', function(){
-    return{
-        require:'ngModel',
-        link: function(scope, elem, attrs, ctrl){
-            ctrl.$formatters.unshift(toJsonFormatter);
-            function toJsonFormatter(value){
-                if (value) {
-                    return angular.toJson(value);
-                }
-            }
-        }
-    };
-});
+        }]);
