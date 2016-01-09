@@ -1,38 +1,64 @@
 <div class="data-models-configuration" ng-cloak>
     <md-content>
         <md-tabs md-dynamic-height md-border-bottom md-selected="activeTabIndex">
-            <md-tab label="Sources" >
+            <md-tab label="Sources">
                 <md-content class="md-padding">
-                    <div class="tab-container">
-                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataSources">
+                    <div layout="row" class="tab-container">
+                        <div flex="20">
+                            <md-list-item ng-repeat="source in dataModels.DATA_SOURCE"
+                                          ng-class="{active:($index === activeModels[modelTypes.DATA_SOURCE])}"
+                                          ng-click="modelSelected(modelTypes.DATA_SOURCE,$index)">
+                                <p> {{ '[' + source.id + ']  ' + source.name }} </p>
+                                <!--
+                                                                <md-checkbox class="md-secondary" ng-model="source.wanted"></md-checkbox>
+                                -->
+                            </md-list-item>
+                        </div>
+                        <md-card class="code-area">
+                            <textarea ui-codemirror="editorOptions"
+                                      ui-refresh="tabsRefresher.sources"
+                                      ng-model="activeModel">
 
-                        </ui-codemirror>
+                            </textarea>
+                            <md-card-actions>
+                                <md-card-actions layout="row" layout-align="end center">
+                                    <md-button ng-click="saveOrUpdateModel()">Save</md-button>
+                                    <md-button ng-click="deleteModel()">Delete</md-button>
+                                </md-card-actions>
+                            </md-card-actions>
+                        </md-card>
+<!--                        <div class="code-area">
+
+                        </div>-->
+
                     </div>
                 </md-content>
             </md-tab>
             <md-tab label="Views">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataViews">
+                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.views"
+                                  ng-model="configs.dataViews">
 
-                        </ui-codemirror>
+                        </textarea>
                     </div>
                 </md-content>
             </md-tab>
             <md-tab label="Sets">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="configs.dataSets">
+                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.sets"
+                                  ng-model="configs.dataSets">
 
-                        </ui-codemirror>
+                        </textarea>
                     </div>
                 </md-content>
             </md-tab>
             <md-tab label="Query">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <ui-codemirror ui-codemirror-opts="editorOptions"  ng-model="queryConfig">
-                        </ui-codemirror>
+                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.query" ng-model="queryConfig">
+                        </textarea>
                     </div>
                 </md-content>
             </md-tab>
@@ -40,6 +66,7 @@
                 <md-content class="md-padding">
                     <div class="tab-container">
                         {{queryResults}}
+                        <div ui-grid="gridOptions" class="results-grid"></div>
                     </div>
                 </md-content>
             </md-tab>

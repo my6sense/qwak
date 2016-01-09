@@ -13,12 +13,26 @@ angular.module('myApp.services.data-access.data-access-service', [])
 
             },
             getAll: function (model) {
-                return $http.get(base + model)
+                return $http.get(base + model.toLowerCase())
             },
             save: function (model, data) {
-                return $http.post(base + model, data)
-
+                return $http.post(base + model.toLowerCase(), data)
             },
+            saveOrUpdate : function(model, data){
+                if (!data.id){
+                    return this.save(model.toLowerCase(),data);
+                } else {
+                    return $http.put(base + model.toLowerCase() + "/" + data.id, data)
+                }
+            },
+            remove : function(model,data){
+                if (data.id){
+                    return $http.delete(base + model.toLowerCase() + "/" + data.id, data)
+                } else {
+                    return false;
+                }
+            }
+
         };
         return appData;
     }]);

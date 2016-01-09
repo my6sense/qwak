@@ -5,6 +5,8 @@ angular.module('myApp', [
     'ngRoute',
     'ngMaterial',
     'ui.codemirror',
+    'ui.grid',
+
     'myApp.view1',
     'myApp.view2',
     'myApp.version',

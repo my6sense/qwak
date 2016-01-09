@@ -2,6 +2,28 @@
   .tab-container {
     height:330px;
     width: 100%;
-    border: 1px solid;
   }
+  .results-grid {
+    height: 100%;
+    width: 100%;
+  }
+  .code-area {
+    height:100%;
+    width: 100%;
+  }
+  [role="tabpanel"],
+  md-tabs {
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;
+    -ms-transition: opacity 0.5s ease-in;
+    -o-transition: opacity 0.5s ease-in;
+    transition: opacity 0.5s ease-in;
+  }
+  .active {
+    .md-button {
+      background-color: rgba(158,158,158,0.2);
+    }
+  }
+
+
 }
