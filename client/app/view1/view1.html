@@ -1,15 +1,16 @@
 <div class="data-models-configuration" ng-cloak>
     <md-content>
-        <md-tabs md-dynamic-height md-border-bottom md-selected="activeTabIndex">
-            <md-tab label="Sources">
+        <md-tabs md-dynamic-height md-border-bottom md-selected="activeTabIndex" >
+
+            <md-tab ng-repeat="(key,dataModel) in vm.dataModels" label="{{dataModel.title}}" md-on-select="modelSectionSelected(key)">
                 <md-content class="md-padding">
                     <div layout="row" class="tab-container">
                         <div flex="20">
                             <md-button class="md-raised md-primary" ng-click="addPreviewModel()">Create</md-button>
-                            <md-list-item ng-repeat="source in dataModels.DATA_SOURCE"
-                                          ng-class="{active:($index === activeModels[modelTypes.DATA_SOURCE])}"
-                                          ng-click="modelSelected(modelTypes.DATA_SOURCE,$index)">
-                                <p> {{ '[' + source.id + ']  ' + source.name }} </p>
+                            <md-list-item ng-repeat="dm in dataModel.data"
+                                          ng-class="{active:($index === dataModel.activeIndex)}"
+                                          ng-click="modelSelected(key,$index)">
+                                <p> {{ '[' + dm.id + ']  ' + dm.name }} </p>
                                 <!--
                                                                 <md-checkbox class="md-secondary" ng-model="source.wanted"></md-checkbox>
                                 -->
@@ -18,7 +19,7 @@
                         <md-card class="code-area">
                             <textarea ui-codemirror="editorOptions"
                                       ui-refresh="tabsRefresher.sources"
-                                      ng-model="activeModel">
+                                      ng-model="vm.dataModels[activeModelType].data[vm.dataModels[activeModelType].activeIndex]" json-parse>
 
                             </textarea>
                             <md-card-actions>
@@ -35,10 +36,10 @@
                     </div>
                 </md-content>
             </md-tab>
-            <md-tab label="Views">
+<!--            <md-tab label="Views">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.views"
+                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.views"
                                   ng-model="configs.dataViews">
 
                         </textarea>
@@ -48,7 +49,7 @@
             <md-tab label="Sets">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.sets"
+                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.sets"
                                   ng-model="configs.dataSets">
 
                         </textarea>
@@ -58,11 +59,11 @@
             <md-tab label="Query">
                 <md-content class="md-padding">
                     <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" ui-refresh="tabsRefresher.query" ng-model="queryConfig">
+                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.query" ng-model="queryConfig">
                         </textarea>
                     </div>
                 </md-content>
-            </md-tab>
+            </md-tab>-->
             <md-tab label="Query Results">
                 <md-content class="md-padding">
                     <div class="tab-container">

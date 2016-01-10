@@ -1,5 +1,6 @@
 - When adding a new model, it's id should be updated immediately.
-- problem with removal - does not get removed (should use splice)
-- model is resetting each time list gets selected, it should not.
+- Add models functions to rest of the models
+- can't delete an unsaved model.
+- make the example easier to understand. also it shoudln't add data each time only if not exist.
 - separate the actual dataModel from db data such as ID , createdAt, updatedAt..
 
