@@ -35,7 +35,7 @@ var q = require('q');
 function getActualFieldByViewField(viewField, dataViews) {
     var view = viewField.split(".")[0];
     var field = viewField.split(".")[1];
-    var viewObj = _.findWhere(dataViews, {name : view});
+    var viewObj = _.findWhere(dataViews, {name: view});
     var fieldObj = _.findWhere(viewObj.fields, {name: field});
     if (fieldObj) { // if there is alias on the field we use it for the order by clause (since it's above in the hierarchy)
         field = fieldObj.as || fieldObj.name;
@@ -126,8 +126,8 @@ function joinDataSet(joinDescription, queries, views) {
 
             var fieldName1 = getFieldNameToUse(i - 1, joinDescription);
             var fieldName2 = getFieldNameToUse(i, joinDescription);
-            var viewObj1 = _.findWhere(views,{name: joinDescription[i - 1].view});
-            var viewObj2 = _.findWhere(views,{name: joinDescription[i].view});
+            var viewObj1 = _.findWhere(views, {name: joinDescription[i - 1].view});
+            var viewObj2 = _.findWhere(views, {name: joinDescription[i].view});
             this.on(viewObj1.table + "." + fieldName1, "=", viewObj2.table + "." + fieldName2);
         });
     }
@@ -396,25 +396,33 @@ var QueryBuilder = {
         var deferred = q.defer();
         var Knex = require('knex');
         knex = Knex(connection);
-        if (generateSampleData){
-            knex.schema.createTableIfNotExists('events', function (table) {
-                table.increments('id');
-                table.integer('measure1');
-                table.timestamps();
-            }).then(function () {
-                console.log('Events Table is Created!');
-                knex('events').insert([{measure1: 20}, {measure1: 30},  { measure1: 40}]).then(function(){
-                    console.log('Events Table is filled with data!');
-                    knex.raw("SELECT * FROM Events;")
-                        .then(function (result) {
-                            if (result) {
-                                console.log(result);
-                            }
-                        });
-                    deferred.resolve();
+        if (generateSampleData) {
+            try {
+                knex.schema.dropTableIfExists('events').then(function(){
+                    knex.schema.createTable('events', function (table) {
+                        table.increments('id');
+                        table.integer('measure1');
+                        table.timestamps();
+                    }).then(function () {
+                        console.log('Events Table is Created!');
+                        knex('events').insert([{measure1: 20}, {measure1: 30}, {measure1: 40}]).then(function () {
+                            console.log('Events Table is filled with data!');
+                            knex.raw("SELECT * FROM Events;")
+                                .then(function (result) {
+                                    if (result) {
+                                        console.log(result);
+                                    }
+                                });
+                            deferred.resolve();
 
+                        });
+                    });
                 });
-            });
+
+            } catch (error) {
+                console.error(error)
+                deferred.reject(error);
+            }
         } else {
             deferred.resolve();
         }
@@ -429,6 +437,7 @@ var QueryBuilder = {
         var externalDataViews = dataModels.dataViews;
         var externalDataSets = dataModels.dataSets;
         var externalDataSources = dataModels.dataSources;
+
         function loadJson() {
 
         }
@@ -591,16 +600,16 @@ var QueryBuilder = {
 
      */
     buildReport: function (reportConfig, useSampleData) {
-/*        console.log("_dataSources : " ,_dataSources);
-        console.log("_dataSets: :" ,_dataSets);
-        console.log(reportConfig.data_set);*/
+        /*        console.log("_dataSources : " ,_dataSources);
+         console.log("_dataSets: :" ,_dataSets);
+         console.log(reportConfig.data_set);*/
         //TODO convert all the places where there is direct access by key to one of the models to work
         // with an the key as a property.
         var deferred = q.defer();
-        var dataSet = _.findWhere(_dataSets, {name : reportConfig.data_set});
-        var dataSource = _.findWhere(_dataSources,{name :dataSet.dataSource});
+        var dataSet = _.findWhere(_dataSets, {name: reportConfig.data_set});
+        var dataSource = _.findWhere(_dataSources, {name: dataSet.dataSource});
 
-        QueryBuilder.setupConnector(dataSource,useSampleData).then(function(){
+        QueryBuilder.setupConnector(dataSource, useSampleData).then(function () {
             // iterate over all the views in the data set.
             var views = _.pluck(dataSet.data.joins, 'view');
             var joinsProps = dataSet.data.joins;
@@ -608,7 +617,7 @@ var QueryBuilder = {
             for (var i = 0; i < views.length; i++) {
                 console.log("here0");
 
-                var view =  _.findWhere(_dataViews, {name : views[i]});
+                var view = _.findWhere(_dataViews, {name: views[i]});
                 view.name = views[i];
                 var joinField = _.findWhere(joinsProps, {view: view.name}).field;
                 console.log("here1");
@@ -637,18 +646,21 @@ var QueryBuilder = {
             console.log("final query: ", query.toString());
 
             // apply sort on the result.
-            query.then(function(result){
-                if (result){
+            query.then(function (result) {
+                if (result) {
                     deferred.resolve(result);
                 } else {
                     deferred.reject(null);
                 }
 
-            },function(error){
+            }, function (error) {
                 // error
                 deferred.reject(error);
 
             });
+        },
+            function(error){
+                deferred.reject(error);
         });
         return deferred.promise;
     }

@@ -75,12 +75,9 @@
         </md-tabs>
     </md-content>
     <div layout="row" layout-align="start center" class="controls-row">
-        <md-button class="md-raised md-primary" ng-click="updateModels()">
-            Update Models
-        </md-button>
         <md-button class="md-raised md-primary" ng-click="generateReport()">
-            Query
+            Query : {{vm.dataModels.DATA_QUERY.data[vm.dataModels.DATA_QUERY.activeIndex].name}}
         </md-button>
-        <div ng-show="showActionStatus">{{actionStatus}}</div>
+        <div ng-show="showActionStatus" ng-class="actionStatusClass">{{actionStatus}}</div>
     </div>
 </div>

@@ -1,6 +1,2 @@
-- When adding a new model, it's id should be updated immediately.
-- Add models functions to rest of the models
-- can't delete an unsaved model.
-- make the example easier to understand. also it shoudln't add data each time only if not exist.
+- make the example easier to understand. also it shouldn't add data each time only if not exist.
 - separate the actual dataModel from db data such as ID , createdAt, updatedAt..
-

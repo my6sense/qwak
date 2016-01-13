@@ -24,6 +24,20 @@
       background-color: rgba(158,158,158,0.2);
     }
   }
+  .controls-row {
+    .neutral {
+      color:black;
+    }
+    .success {
+      color: green;
+    }
+    .error {
+      color: red;
+    }
+    .warning {
+      color: orange;
+    }
+  }
 
 
 }

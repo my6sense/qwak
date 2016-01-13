@@ -17,6 +17,14 @@
   transition: opacity 0.5s ease-in; }
 .data-models-configuration .active .md-button {
   background-color: rgba(158, 158, 158, 0.2); }
+.data-models-configuration .controls-row .neutral {
+  color: black; }
+.data-models-configuration .controls-row .success {
+  color: green; }
+.data-models-configuration .controls-row .error {
+  color: red; }
+.data-models-configuration .controls-row .warning {
+  color: orange; }
 
 .menu {
   list-style: none;

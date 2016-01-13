@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('myApp.view1', ['ngRoute'])
+angular.module('myApp.editor', ['ngRoute'])
 
     .config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.when('/view1', {
-            templateUrl: 'view1/view1.html',
-            controller: 'View1Ctrl'
+        $routeProvider.when('/editor', {
+            templateUrl: 'editor/editor.html',
+            controller: 'EditorCtrl'
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q',
+    .controller('EditorCtrl', ['$scope', '$http', '$timeout', 'appData', '$q',
         function ($scope, $http, $timeout, appData, $q) {
 
             // --- INNER FUNCTIONS --- //
@@ -81,6 +81,7 @@ angular.module('myApp.view1', ['ngRoute'])
                             activeIndex: 0,
                             path: 'dataQuery',
                             demo: {
+                                "name" : "Query name",
                                 "data_set": "sampleSet",
                                 "dimensions": ['sampleView.id'],
                                 "measures": ['sampleView.measure1'
@@ -89,8 +90,8 @@ angular.module('myApp.view1', ['ngRoute'])
 
                                     "sampleView.id": [
                                         {
-                                            "operator": ">",
-                                            "value": "3"
+                                            "operator": ">=",
+                                            "value": "2"
                                         }
                                     ],
                                 }
@@ -112,23 +113,6 @@ angular.module('myApp.view1', ['ngRoute'])
                 $scope.tabs = [];
 
                 $scope.queryResults = "";
-
-                $scope.queryConfig = {
-                    "data_set": "sampleSet",
-                    "dimensions": ['sampleView.id'],
-                    "measures": ['sampleView.measure1'
-                    ],
-                    "filters": {
-
-                        "sampleView.id": [
-                            {
-                                "operator": ">",
-                                "value": "3"
-                            }
-                        ],
-                    }
-                };
-
                 $scope.editorOptions = {
                     lineWrapping: true,
                     lineNumbers: false,
@@ -179,25 +163,31 @@ angular.module('myApp.view1', ['ngRoute'])
                         DATA_SET: results[2].data
                     };*/
                     $scope.modelSelected("DATA_SOURCE", 0);
-                    $scope.showActionCompletedIndication("Models Loaded Successfully!");
+                    //$scope.showActionCompletedIndication("Models Loaded Successfully!","success");
 
                 }, function (error) {
-                    $scope.showActionCompletedIndication("Error. Could not load data. :( ");
+                    $scope.showActionCompletedIndication("Error. Could not load data. :( ","error");
 
                 });
             };
-            $scope.showActionCompletedIndication = function (msg) {
+            $scope.showActionCompletedIndication = function (msg, type) {
                 $scope.actionStatus = msg;
                 $scope.showActionStatus = true;
+                $scope.actionStatusClass = (type || 'neutral');
                 $timeout(function () {
                     $scope.showActionStatus = false;
-                }, 15000);
+                }, 5000);
             };
             $scope.generateReport = function () {
-                appData.post("dataQuery/run", $scope.queryConfig).success(function (data) {
+                var query = $scope.vm.dataModels.DATA_QUERY.data[$scope.vm.dataModels.DATA_QUERY.activeIndex];
+                if (!query){
+                    $scope.showActionCompletedIndication("Yo! Please create a data query first.","warning");
+                    return;
+                }
+                appData.post("dataQuery/run", query).success(function (data) {
                     setGridColumns(data);
                     $scope.gridOptions.data = data;
-                    $scope.showActionCompletedIndication("Report Generated!");
+                    $scope.showActionCompletedIndication("Report Generated!","success");
                     $scope.activeTabIndex = 4;
                 });
             };
@@ -219,33 +209,35 @@ angular.module('myApp.view1', ['ngRoute'])
                 $scope.vm.dataModels[modelType].activeIndex = index;
             };
             $scope.addPreviewModel = function () {
-               // var newModel = _.clone($scope.previewModels[$scope.activeModelType]);
                 var newModel = _.clone($scope.vm.dataModels[$scope.activeModelType].demo);
                 newModel.token = new Date().getTime();
-                $scope.vm.dataModels[$scope.activeModelType].data.unshift(newModel);
-                $scope.modelSelected($scope.activeModelType, 0);
+                $scope.vm.dataModels[$scope.activeModelType].data.unshift(newModel); // add new item to list
+                $scope.modelSelected($scope.activeModelType, 0); // select the new created item in list
             };
             $scope.saveOrUpdateModel = function () {
-               // var model = $scope.dataModels[$scope.activeModelType][$scope.activeModels[$scope.activeModelType]];
                 var activeModel = $scope.vm.dataModels[$scope.activeModelType].data[$scope.vm.dataModels[$scope.activeModelType].activeIndex];
-/*                appData.saveOrUpdate($scope.modelPathName[$scope.activeModelType], model).success(function (result) {
-                    // update the model with the new data
-                    $scope.dataModels[$scope.activeModelType][$scope.activeModels[$scope.activeModelType]] = result;
-                });*/
                 appData.saveOrUpdate($scope.vm.dataModels[$scope.activeModelType].path, activeModel).success(function (result) {
                     // update the model with the new data
-                    activeModel = result;
+                    $scope.vm.dataModels[$scope.activeModelType].data[$scope.vm.dataModels[$scope.activeModelType].activeIndex] = result;
+                    $scope.showActionCompletedIndication("Model Created Successfully!","success");
+
                 });
             };
             $scope.deleteModel = function () {
-                //var model = $scope.dataModels[$scope.activeModelType][$scope.activeModels[$scope.activeModelType]];
-                var activeModel = $scope.vm.dataModels[$scope.activeModelType].data[$scope.vm.dataModels[$scope.activeModelType].activeIndex];
-                appData.remove($scope.vm.dataModels[$scope.activeModelType].path, activeModel).then(function () {
-                    // remove item from list
+                function removeItem(){
                     $scope.vm.dataModels[$scope.activeModelType].data.splice($scope.vm.dataModels[$scope.activeModelType].activeIndex, 1);
                     $scope.modelSelected($scope.activeModelType, 0);
+                    $scope.showActionCompletedIndication("Model Deleted.","success");
+                }
+                var activeModel = $scope.vm.dataModels[$scope.activeModelType].data[$scope.vm.dataModels[$scope.activeModelType].activeIndex];
+                if (!activeModel.id){ // not yet in DB, remove from vm
+                    removeItem();
+                } else {
+                    appData.remove($scope.vm.dataModels[$scope.activeModelType].path, activeModel).then(function () {
+                        removeItem();
+                    });
+                }
 
-                });
             };
 
             // --- INIT --- //
