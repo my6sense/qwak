@@ -1,0 +1,271 @@
+{
+  "data": {
+    "datasets": [],
+    "datasources": [],
+    "dataviews": [],
+    "queries": [],
+    "datasamplesprovider": [],
+    "dataquery": [
+      {
+        "name": "Query name",
+        "data_set": "sampleSet",
+        "dimensions": [
+          "sampleView2.id"
+        ],
+        "measures": [
+          "sampleView2.measure1",
+          "sampleView2.measure2"
+        ],
+        "filters": {
+          "sampleView2.id": [
+            {
+              "operator": ">=",
+              "value": "2"
+            }
+          ]
+        },
+        "token": 1452726486933,
+        "createdAt": "2016-01-13T23:08:19.552Z",
+        "updatedAt": "2016-01-13T23:50:48.976Z",
+        "id": 8
+      }
+    ],
+    "datasample": [],
+    "dataset": [
+      {
+        "name": "sampleSet",
+        "dataSource": "localDb",
+        "data": {
+          "joins": [
+            {
+              "view": "sampleView2"
+            }
+          ]
+        },
+        "token": 1452723921348,
+        "createdAt": "2016-01-13T22:25:23.349Z",
+        "updatedAt": "2016-01-13T23:30:53.903Z",
+        "id": 14
+      }
+    ],
+    "datasource": [
+      {
+        "name": "localDb",
+        "client": "sqlite3",
+        "connection": {
+          "filename": "./test.db"
+        },
+        "token": 1452723902670,
+        "createdAt": "2016-01-13T22:25:04.822Z",
+        "updatedAt": "2016-01-13T22:25:04.822Z",
+        "id": 33
+      },
+      {
+        "name": "localDb",
+        "client": "sqlite3",
+        "connection": {
+          "filename": "./test.db"
+        },
+        "token": 1452727817079,
+        "createdAt": "2016-01-13T23:30:19.880Z",
+        "updatedAt": "2016-01-13T23:30:19.880Z",
+        "id": 34
+      }
+    ],
+    "dataview": [
+      {
+        "name": "sampleView2",
+        "table": "Events",
+        "fields": [
+          {
+            "name": "id",
+            "type": "dimension",
+            "query": {
+              "field": "id"
+            }
+          },
+          {
+            "name": "measure1",
+            "type": "measure",
+            "query": {
+              "field": "measure1"
+            }
+          },
+          {
+            "name": "measure2",
+            "type": "measure",
+            "query": {
+              "raw": "{measure1} *0.222"
+            }
+          }
+        ],
+        "token": 1452727839322,
+        "createdAt": "2016-01-13T23:30:45.746Z",
+        "updatedAt": "2016-01-13T23:38:28.218Z",
+        "id": 21
+      }
+    ]
+  },
+  "schema": {
+    "datasets": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "datasources": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "dataviews": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "queries": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "datasamplesprovider": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "dataquery": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "datasample": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "dataset": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "datasource": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    },
+    "dataview": {
+      "id": {
+        "type": "integer",
+        "autoIncrement": true,
+        "primaryKey": true,
+        "unique": true
+      },
+      "createdAt": {
+        "type": "datetime"
+      },
+      "updatedAt": {
+        "type": "datetime"
+      }
+    }
+  },
+  "counters": {
+    "datasets": {},
+    "datasources": {},
+    "dataviews": {},
+    "queries": {},
+    "dataquery": {
+      "id": 8
+    },
+    "dataset": {
+      "id": 14
+    },
+    "datasource": {
+      "id": 34
+    },
+    "dataview": {
+      "id": 21
+    },
+    "datasamplesprovider": {},
+    "datasample": {}
+  }
+}

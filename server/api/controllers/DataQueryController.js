@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Dataqueries
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var queryEngine = require('./../../../../../engine/index');
+var queryEngine = require('./../../../engine/index');
 var q = require('q');
 function getDataModels() {
     return q.all([
@@ -21,7 +21,8 @@ module.exports = {
                 dataViews: dataViews,
                 dataSets: dataSets,
                 dataSources: dataSources,
-            }
+            };
+            console.log("setupDataModels");
             queryEngine.setupDataModels(dataModels);
 
             queryEngine.buildReport(req.body).then(function (result) {

@@ -1,2 +1,4 @@
 - make the example easier to understand. also it shouldn't add data each time only if not exist.
 - separate the actual dataModel from db data such as ID , createdAt, updatedAt..
+- Make the query screen easier - that means that according to the set only the relevant views + its dimensions
+and measures will be accessible.

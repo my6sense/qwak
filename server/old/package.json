@@ -1,0 +1,30 @@
+{
+  "name": "kwak-server",
+  "version": "1.0.0",
+  "description": "Reports builder server",
+  "main": "server.js",
+  "scripts": {
+    "test": "node node_modules/jasmine-node/bin/jasmine-node test/"
+  },
+  "keywords": [
+    "reports",
+    "query",
+    "sql",
+    "bi",
+    "analytics",
+    "server",
+    "data"
+  ],
+  "author": "Yotam Shalev <yotamsha@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "filestorage": "^1.4.0",
+    "jasmine-node": "^1.14.5",
+    "path": "^0.12.7",
+    "rewire": "^2.5.1",
+    "underscore": "^1.8.3"
+  }
+}
