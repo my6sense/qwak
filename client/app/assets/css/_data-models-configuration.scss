@@ -29,12 +29,14 @@
     height:100%;
     position: relative;
     .code-mode-buttons-container {
+      background-color: rgba(255, 255, 255, 0.15);
       position: absolute;
       top: 0;
-      z-index: 1;
+      z-index: 100;
       right: 0;
-      height: 50px;
-      width: 180px;
+      height: 45px;
+      width: 173px;
+      border-radius: 0px 0px 0px 7px;
     }
 
   }
