@@ -1,7 +1,25 @@
 .data-models-configuration {
+  padding-top: 20px;
+  .logo-img {
+    width:200px;
+    position: absolute;
+    z-index: 1;
+    top: 40px;
+  }
+
+  md-tabs-wrapper {
+    padding-left: 25%;
+    padding-top: 24px;
+  }
   .tab-container {
-    height:330px;
+    height:500px;
     width: 100%;
+
+    .create-btn {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 0px;
+    }
   }
   .results-grid {
     height: 100%;
@@ -9,7 +27,16 @@
   }
   .code-area {
     height:100%;
-    width: 100%;
+    position: relative;
+    .code-mode-buttons-container {
+      position: absolute;
+      top: 0;
+      z-index: 1;
+      right: 0;
+      height: 50px;
+      width: 180px;
+    }
+
   }
   [role="tabpanel"],
   md-tabs {

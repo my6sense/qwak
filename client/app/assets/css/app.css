@@ -1,30 +1,61 @@
 /* app css stylesheet */
-.data-models-configuration .tab-container {
-  height: 330px;
-  width: 100%; }
-.data-models-configuration .results-grid {
-  height: 100%;
-  width: 100%; }
-.data-models-configuration .code-area {
-  height: 100%;
-  width: 100%; }
-.data-models-configuration [role="tabpanel"],
-.data-models-configuration md-tabs {
-  -webkit-transition: opacity 0.5s ease-in;
-  -moz-transition: opacity 0.5s ease-in;
-  -ms-transition: opacity 0.5s ease-in;
-  -o-transition: opacity 0.5s ease-in;
-  transition: opacity 0.5s ease-in; }
-.data-models-configuration .active .md-button {
-  background-color: rgba(158, 158, 158, 0.2); }
-.data-models-configuration .controls-row .neutral {
-  color: black; }
-.data-models-configuration .controls-row .success {
-  color: green; }
-.data-models-configuration .controls-row .error {
-  color: red; }
-.data-models-configuration .controls-row .warning {
-  color: orange; }
+.data-models-configuration {
+  padding-top: 20px; }
+  .data-models-configuration .logo-img {
+    width: 200px;
+    position: absolute;
+    z-index: 1;
+    top: 40px; }
+  .data-models-configuration md-tabs-wrapper {
+    padding-left: 25%;
+    padding-top: 24px; }
+  .data-models-configuration .tab-container {
+    height: 500px;
+    width: 100%; }
+    .data-models-configuration .tab-container .create-btn {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      margin-left: 0px; }
+  .data-models-configuration .results-grid {
+    height: 100%;
+    width: 100%; }
+  .data-models-configuration .code-area {
+    height: 100%;
+    position: relative; }
+    .data-models-configuration .code-area .code-mode-buttons-container {
+      position: absolute;
+      top: 0;
+      z-index: 1;
+      right: 0;
+      height: 50px;
+      width: 180px; }
+  .data-models-configuration [role="tabpanel"],
+  .data-models-configuration md-tabs {
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;
+    -ms-transition: opacity 0.5s ease-in;
+    -o-transition: opacity 0.5s ease-in;
+    transition: opacity 0.5s ease-in; }
+  .data-models-configuration .active .md-button {
+    background-color: rgba(158, 158, 158, 0.2); }
+  .data-models-configuration .controls-row .neutral {
+    color: black; }
+  .data-models-configuration .controls-row .success {
+    color: green; }
+  .data-models-configuration .controls-row .error {
+    color: red; }
+  .data-models-configuration .controls-row .warning {
+    color: orange; }
+
+.md-button {
+  /*
+  border-radius: 10px;
+  */ }
+  .md-button.md-primary.md-raised {
+    color: white; }
+
+.md-tab {
+  padding: 23px 24px 12px 24px; }
 
 .menu {
   list-style: none;
