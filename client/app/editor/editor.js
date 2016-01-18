@@ -117,6 +117,7 @@ angular.module('myApp.editor', ['ngRoute'])
                     lineWrapping: true,
                     lineNumbers: false,
                     indentWithTabs: true,
+                    theme : 'dracula',
                     //readOnly: 'nocursor',
                     mode: 'Javascript',
                 };
@@ -189,6 +190,8 @@ angular.module('myApp.editor', ['ngRoute'])
                     $scope.gridOptions.data = data;
                     $scope.showActionCompletedIndication("Report Generated!","success");
                     $scope.activeTabIndex = 4;
+                }).error(function(){
+                    $scope.showActionCompletedIndication("Query failed. :( ","error");
                 });
             };
             $scope.refreshAllTabsCodeMirrors = function () {
@@ -219,8 +222,11 @@ angular.module('myApp.editor', ['ngRoute'])
                 appData.saveOrUpdate($scope.vm.dataModels[$scope.activeModelType].path, activeModel).success(function (result) {
                     // update the model with the new data
                     $scope.vm.dataModels[$scope.activeModelType].data[$scope.vm.dataModels[$scope.activeModelType].activeIndex] = result;
-                    $scope.showActionCompletedIndication("Model Created Successfully!","success");
+                    var msg = activeModel.id ? "Model updated successfully!" : "Model created successfully!";
+                    $scope.showActionCompletedIndication(msg,"success");
 
+                }).error(function(error){
+                    $scope.showActionCompletedIndication("Could not save model. :( ","error");
                 });
             };
             $scope.deleteModel = function () {

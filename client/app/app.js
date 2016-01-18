@@ -12,6 +12,11 @@ angular.module('myApp', [
     'myApp.version',
     'myApp.services.data-access'
 ]).
-config(['$routeProvider', function ($routeProvider) {
+config(['$routeProvider','$mdThemingProvider','$mdIconProvider', function ($routeProvider, $mdThemingProvider, $mdIconProvider) {
+    $mdThemingProvider.theme('default')
+        .primaryPalette('amber')
+        .accentPalette('amber');
+    $mdIconProvider
+        .defaultFontSet( 'fontawesome' )
     $routeProvider.otherwise({redirectTo: '/editor'});
 }]);

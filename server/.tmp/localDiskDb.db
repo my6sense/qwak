@@ -8,7 +8,7 @@
     "dataquery": [
       {
         "name": "Query name",
-        "data_set": "sampleSet",
+        "data_set": "sampleSet2",
         "dimensions": [
           "sampleView2.id"
         ],
@@ -26,14 +26,36 @@
         },
         "token": 1452726486933,
         "createdAt": "2016-01-13T23:08:19.552Z",
-        "updatedAt": "2016-01-13T23:50:48.976Z",
+        "updatedAt": "2016-01-14T22:38:34.438Z",
         "id": 8
+      },
+      {
+        "name": "Query name",
+        "data_set": "sampleSet1",
+        "dimensions": [
+          "sampleView.id"
+        ],
+        "measures": [
+          "sampleView.measure1"
+        ],
+        "filters": {
+          "sampleView.id": [
+            {
+              "operator": ">=",
+              "value": "2"
+            }
+          ]
+        },
+        "token": 1452809912260,
+        "createdAt": "2016-01-14T22:22:37.317Z",
+        "updatedAt": "2016-01-14T22:30:41.840Z",
+        "id": 9
       }
     ],
     "datasample": [],
     "dataset": [
       {
-        "name": "sampleSet",
+        "name": "sampleSet2",
         "dataSource": "localDb",
         "data": {
           "joins": [
@@ -44,8 +66,23 @@
         },
         "token": 1452723921348,
         "createdAt": "2016-01-13T22:25:23.349Z",
-        "updatedAt": "2016-01-13T23:30:53.903Z",
+        "updatedAt": "2016-01-14T22:29:06.799Z",
         "id": 14
+      },
+      {
+        "name": "sampleSet1",
+        "dataSource": "localDb",
+        "data": {
+          "joins": [
+            {
+              "view": "sampleView"
+            }
+          ]
+        },
+        "token": 1452809908468,
+        "createdAt": "2016-01-14T22:22:33.290Z",
+        "updatedAt": "2016-01-14T22:29:14.019Z",
+        "id": 15
       }
     ],
     "datasource": [
@@ -57,19 +94,8 @@
         },
         "token": 1452723902670,
         "createdAt": "2016-01-13T22:25:04.822Z",
-        "updatedAt": "2016-01-13T22:25:04.822Z",
+        "updatedAt": "2016-01-14T23:15:41.720Z",
         "id": 33
-      },
-      {
-        "name": "localDb",
-        "client": "sqlite3",
-        "connection": {
-          "filename": "./test.db"
-        },
-        "token": 1452727817079,
-        "createdAt": "2016-01-13T23:30:19.880Z",
-        "updatedAt": "2016-01-13T23:30:19.880Z",
-        "id": 34
       }
     ],
     "dataview": [
@@ -101,8 +127,32 @@
         ],
         "token": 1452727839322,
         "createdAt": "2016-01-13T23:30:45.746Z",
-        "updatedAt": "2016-01-13T23:38:28.218Z",
+        "updatedAt": "2016-01-17T22:45:01.053Z",
         "id": 21
+      },
+      {
+        "name": "sampleView",
+        "table": "Events",
+        "fields": [
+          {
+            "name": "id",
+            "type": "dimension",
+            "query": {
+              "field": "id"
+            }
+          },
+          {
+            "name": "measure1",
+            "type": "measure",
+            "query": {
+              "field": "measure1"
+            }
+          }
+        ],
+        "token": 1452809903874,
+        "createdAt": "2016-01-14T22:22:29.362Z",
+        "updatedAt": "2016-01-14T22:22:29.362Z",
+        "id": 22
       }
     ]
   },
@@ -254,16 +304,16 @@
     "dataviews": {},
     "queries": {},
     "dataquery": {
-      "id": 8
+      "id": 9
     },
     "dataset": {
-      "id": 14
+      "id": 15
     },
     "datasource": {
-      "id": 34
+      "id": 35
     },
     "dataview": {
-      "id": 21
+      "id": 22
     },
     "datasamplesprovider": {},
     "datasample": {}

@@ -1,69 +1,93 @@
 <div class="data-models-configuration" ng-cloak>
+    <img class="logo-img" src="assets/img/quak-logo.png"/>
+    <!--    <md-button class="md-raised md-primary" ng-click="generateReport()">
+            Query : {{vm.dataModels.DATA_QUERY.data[vm.dataModels.DATA_QUERY.activeIndex].name}}
+        </md-button>-->
     <md-content>
-        <md-tabs md-dynamic-height md-border-bottom md-selected="activeTabIndex" >
+        <md-tabs md-dynamic-height md-border-bottom md-selected="activeTabIndex">
 
-            <md-tab ng-repeat="(key,dataModel) in vm.dataModels" label="{{dataModel.title}}" md-on-select="modelSectionSelected(key)">
+            <md-tab ng-repeat="(key,dataModel) in vm.dataModels" label="{{dataModel.title}}"
+                    md-on-select="modelSectionSelected(key)">
                 <md-content class="md-padding">
                     <div layout="row" class="tab-container">
                         <div flex="20">
-                            <md-button class="md-raised md-primary" ng-click="addPreviewModel()">Create</md-button>
+                            <md-button class="md-raised md-primary create-btn" ng-click="addPreviewModel()">Create</md-button>
                             <md-list-item ng-repeat="dm in dataModel.data"
                                           ng-class="{active:($index === dataModel.activeIndex)}"
                                           ng-click="modelSelected(key,$index)">
-                                <p> {{ '[' + dm.id + ']  ' + dm.name }} </p>
+                                <p> {{ '[' + dm.id + '] ' + dm.name }} </p>
                                 <!--
                                                                 <md-checkbox class="md-secondary" ng-model="source.wanted"></md-checkbox>
                                 -->
                             </md-list-item>
                         </div>
-                        <md-card class="code-area">
-                            <textarea ui-codemirror="editorOptions"
-                                      ui-refresh="tabsRefresher.sources"
-                                      ng-model="vm.dataModels[activeModelType].data[vm.dataModels[activeModelType].activeIndex]" json-parse>
+                        <div flex layout="column">
+                            <md-card class="code-area">
+                                <div class="code-mode-buttons-container" layout="row">
+                                    <md-button class="md-icon-button" aria-label="Code">
+                                        <md-icon md-svg-icon="assets/img/icons/ic_code_24px.svg"
+                                                 style="color: greenyellow;"></md-icon>
+                                    </md-button>
+                                    <md-button class="md-icon-button" aria-label="Code">
+                                        <md-icon md-svg-icon="assets/img/icons/ic_mode_edit_24px.svg"
+                                                 style="color: greenyellow;"></md-icon>
+                                    </md-button>
+                                    <md-button class="md-icon-button" aria-label="Run" ng-click="generateReport()">
+                                        <md-tooltip>
+                                            Query : {{vm.dataModels.DATA_QUERY.data[vm.dataModels.DATA_QUERY.activeIndex].name}}
+                                        </md-tooltip>
+                                        <md-icon md-svg-icon="assets/img/icons/ic_play_arrow_24px.svg"
+                                                 style="color: greenyellow;"></md-icon>
+                                    </md-button>
+                                </div>
+                                <textarea ui-codemirror="editorOptions"
+                                          ui-refresh="tabsRefresher.sources"
+                                          ng-model="vm.dataModels[activeModelType].data[vm.dataModels[activeModelType].activeIndex]"
+                                          json-parse>
 
-                            </textarea>
-                            <md-card-actions>
-                                <md-card-actions layout="row" layout-align="end center">
-                                    <md-button ng-click="saveOrUpdateModel()">Save</md-button>
-                                    <md-button ng-click="deleteModel()">Delete</md-button>
+                                </textarea>
+                                <md-card-actions>
+                                    <md-card-actions layout="row" layout-align="end center">
+                                        <div ng-show="showActionStatus" ng-class="actionStatusClass">{{actionStatus}}
+                                        </div>
+                                        <md-button ng-click="deleteModel()">Delete</md-button>
+                                        <md-button class="md-raised md-primary" ng-click="saveOrUpdateModel()">Save
+                                        </md-button>
+                                    </md-card-actions>
                                 </md-card-actions>
-                            </md-card-actions>
-                        </md-card>
-<!--                        <div class="code-area">
-
-                        </div>-->
-
+                            </md-card>
+                        </div>
                     </div>
                 </md-content>
             </md-tab>
-<!--            <md-tab label="Views">
-                <md-content class="md-padding">
-                    <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.views"
-                                  ng-model="configs.dataViews">
+            <!--            <md-tab label="Views">
+                            <md-content class="md-padding">
+                                <div class="tab-container">
+                                    <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.views"
+                                              ng-model="configs.dataViews">
 
-                        </textarea>
-                    </div>
-                </md-content>
-            </md-tab>
-            <md-tab label="Sets">
-                <md-content class="md-padding">
-                    <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.sets"
-                                  ng-model="configs.dataSets">
+                                    </textarea>
+                                </div>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Sets">
+                            <md-content class="md-padding">
+                                <div class="tab-container">
+                                    <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.sets"
+                                              ng-model="configs.dataSets">
 
-                        </textarea>
-                    </div>
-                </md-content>
-            </md-tab>
-            <md-tab label="Query">
-                <md-content class="md-padding">
-                    <div class="tab-container">
-                        <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.query" ng-model="queryConfig">
-                        </textarea>
-                    </div>
-                </md-content>
-            </md-tab>-->
+                                    </textarea>
+                                </div>
+                            </md-content>
+                        </md-tab>
+                        <md-tab label="Query">
+                            <md-content class="md-padding">
+                                <div class="tab-container">
+                                    <textarea ui-codemirror="editorOptions" json-parse ui-refresh="tabsRefresher.query" ng-model="queryConfig">
+                                    </textarea>
+                                </div>
+                            </md-content>
+                        </md-tab>-->
             <md-tab label="Query Results">
                 <md-content class="md-padding">
                     <div class="tab-container">
@@ -75,9 +99,10 @@
         </md-tabs>
     </md-content>
     <div layout="row" layout-align="start center" class="controls-row">
+
+        <div ng-show="showActionStatus" ng-class="actionStatusClass">{{actionStatus}}</div>
         <md-button class="md-raised md-primary" ng-click="generateReport()">
             Query : {{vm.dataModels.DATA_QUERY.data[vm.dataModels.DATA_QUERY.activeIndex].name}}
         </md-button>
-        <div ng-show="showActionStatus" ng-class="actionStatusClass">{{actionStatus}}</div>
     </div>
 </div>
